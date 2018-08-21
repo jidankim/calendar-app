@@ -31,16 +31,16 @@ class Write extends React.Component {
     };
   }
 
-  handleChange(e) {
+  handleChange = event => {
     this.setState({
         ...this.state, contents: {
             ...this.state.contents,
-            [e.target.name]: e.target.value
+            [event.target.name]: event.target.value
         }
     });
   }
 
-  handlePost() {
+  handlePost = () => {
     let contents = this.state.contents;
 
     this.props.onPost(contents).then(
@@ -57,7 +57,7 @@ class Write extends React.Component {
     );
   }
 
-  handleToggleDialog() {
+  handleToggleDialog = () => {
     this.setState({
       toggleDialog: !this.state.toggleDialog
     });

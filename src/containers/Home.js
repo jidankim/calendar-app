@@ -1,20 +1,37 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { EventList, Write } from 'components';
 import { eventPostRequest, eventListRequest, eventEditRequest } from 'actions/event';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CloseIcon from '@material-ui/icons/Close';
+import ErrorIcon from '@material-ui/icons/Error';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 
-const styles = theme => {
-
-};
+const styles = theme => ({
+  close: {
+    width: theme.spacing.unit * 4,
+    height: theme.spacing.unit * 4,
+  },
+  icon: {
+    fontSize: 20,
+  },
+});
 
 class Home extends React.Component {
 
     constructor(props) {
         super(props);
+        this.handleClick = this.handleClick.bind(this);
         this.handlePost = this.handlePost.bind(this);
         // this.loadNewEvent = this.loadNewEvent.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.state = {
+          toggleToast: false
+        };
     }
 
     componentDidMount() {
@@ -63,15 +80,58 @@ class Home extends React.Component {
     //     return this.props.eventListRequest(false, 'new', this.props.eventData[0]._id);
     // }
 
+    handleClick = () => {
+      this.setState({ toggleToast: true });
+    }
+
+    handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      this.setState({ toggleToast: false });
+    }
+
     /* POST EVENT */
     handlePost(contents) {
+        const { classes } = this.props;
+
         return this.props.eventPostRequest(contents).then(
             () => {
                 if (this.props.postStatus.status === "SUCCESS") {
                     // TRIGGER LOAD NEW EVENT
                     // this.loadNewEvent().then(
                     //     () => {
-                            Materialize.toast('Success!', 2000);
+                            this.handleClick;
+                            <Snackbar
+                              anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                              }}
+                              open={this.state.toggleToast}
+                              autoHideDuration={5000}
+                              onClose={this.handleClose}
+                              ContentProps={{
+                                'aria-describedby': 'message-id',
+                              }}
+                              message={
+                                <span id="message-id">
+                                  <CheckCircleIcon className={classes.icon} />
+                                  Success!
+                                </span>
+                              }
+                              action={[
+                                <IconButton
+                                  key="close"
+                                  aria-label="Close"
+                                  color="inherit"
+                                  className={classes.close}
+                                  onClick={this.handleClose}
+                                >
+                                  <CloseIcon />
+                                </IconButton>,
+                              ]}
+                            />
                     //     }
                     // );
                 } else {
@@ -80,21 +140,104 @@ class Home extends React.Component {
                             1: NOT LOGGED IN
                             2: EMPTY CONTENTS
                     */
-                    let $toastContent;
                     switch(this.props.postStatus.error) {
                         case 1:
                             // IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
-                            $toastContent = $('<span style="color: #FFB4BA">You are not logged in</span>');
-                            Materialize.toast($toastContent, 2000);
+                            this.handleClick;
+                            <Snackbar
+                              anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                              }}
+                              open={this.state.toggleToast}
+                              autoHideDuration={5000}
+                              onClose={this.handleClose}
+                              ContentProps={{
+                                'aria-describedby': 'message-id',
+                              }}
+                              message={
+                                <span style="color: #FFB4BA" id="message-id">
+                                  <ErrorIcon className={classes.icon} />
+                                  You are not logged in
+                                </span>
+                              }
+                              action={[
+                                <IconButton
+                                  key="close"
+                                  aria-label="Close"
+                                  color="inherit"
+                                  className={classes.close}
+                                  onClick={this.handleClose}
+                                >
+                                  <CloseIcon />
+                                </IconButton>,
+                              ]}
+                            />
                             setTimeout(() => {location.reload(false);}, 2000);
                             break;
                         case 2:
-                            $toastContent = $('<span style="color: #FFB4BA">Please write something</span>');
-                            Materialize.toast($toastContent, 2000);
+                            this.handleClick;
+                            <Snackbar
+                              anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                              }}
+                              open={this.state.toggleToast}
+                              autoHideDuration={5000}
+                              onClose={this.handleClose}
+                              ContentProps={{
+                                'aria-describedby': 'message-id',
+                              }}
+                              message={
+                                <span style="color: #FFB4BA" id="message-id">
+                                  <ErrorIcon className={classes.icon} />
+                                  Please write something
+                                </span>
+                              }
+                              action={[
+                                <IconButton
+                                  key="close"
+                                  aria-label="Close"
+                                  color="inherit"
+                                  className={classes.close}
+                                  onClick={this.handleClose}
+                                >
+                                  <CloseIcon />
+                                </IconButton>,
+                              ]}
+                            />
                             break;
                         default:
-                            $toastContent = $('<span style="color: #FFB4BA">Something Broke</span>');
-                            Materialize.toast($toastContent, 2000);
+                            this.handleClick;
+                            <Snackbar
+                              anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                              }}
+                              open={this.state.toggleToast}
+                              autoHideDuration={5000}
+                              onClose={this.handleClose}
+                              ContentProps={{
+                                'aria-describedby': 'message-id',
+                              }}
+                              message={
+                                <span style="color: #FFB4BA" id="message-id">
+                                  <ErrorIcon className={classes.icon} />
+                                  Something broke
+                                </span>
+                              }
+                              action={[
+                                <IconButton
+                                  key="close"
+                                  aria-label="Close"
+                                  color="inherit"
+                                  className={classes.close}
+                                  onClick={this.handleClose}
+                                >
+                                  <CloseIcon />
+                                </IconButton>,
+                              ]}
+                            />
                             break;
                     }
                 }
@@ -103,10 +246,41 @@ class Home extends React.Component {
     }
 
     handleEdit(id, index, contents) {
+        const { classes } = this.props;
+
         return this.props.eventEditRequest(id, index, contents).then(
             () => {
                 if (this.props.editStatus.status === "SUCCESS") {
-                    Materialize.toast('Success!', 2000);
+                  this.handleClick;
+                  <Snackbar
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={this.state.toggleToast}
+                    autoHideDuration={5000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                      'aria-describedby': 'message-id',
+                    }}
+                    message={
+                      <span id="message-id">
+                        <CheckCircleIcon className={classes.icon} />
+                        Success!
+                      </span>
+                    }
+                    action={[
+                      <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={this.handleClose}
+                      >
+                        <CloseIcon />
+                      </IconButton>,
+                    ]}
+                  />
                 } else {
                     /*
                         ERROR CODES
@@ -127,8 +301,36 @@ class Home extends React.Component {
                     let error = this.props.editStatus.error;
 
                     // NOTIFY ERROR
-                    let $toastContent = $('<span style="color: #FFB4BA">' + errorMessage[error - 1] + '</span>');
-                    Materialize.toast($toastContent, 2000);
+                    this.handleClick();
+                    <SnackbarContent
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={this.state.toggleToast}
+                      autoHideDuration={5000}
+                      onClose={this.handleClose}
+                      ContentProps={{
+                        'aria-describedby': 'message-id',
+                      }}
+                      message={
+                        <span style="color: #FFB4BA" id="message-id">
+                          <ErrorIcon className={classes.icon} />
+                          {errorMessage[error - 1]}
+                        </span>
+                      }
+                      action={[
+                        <IconButton
+                          key="close"
+                          aria-label="Close"
+                          color="inherit"
+                          className={classes.close}
+                          onClick={this.handleClose}
+                        >
+                          <CloseIcon />
+                        </IconButton>,
+                      ]}
+                    />
 
                     // IF NOT LOGGED IN, REFRESH THE PAGE AFTER 2 SECONDS
                     if (error === 3) {
@@ -159,6 +361,10 @@ class Home extends React.Component {
             </div>
         );
     }
+}
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => {

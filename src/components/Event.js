@@ -33,38 +33,38 @@ class Event extends React.Component {
     }
 
     // canceling dialog and dropdown menu
-    handleCancel() {
+    handleCancel = () => {
         this.setState({
           ...this.state, anchorEl: null, editMode: !this.state.editMode
         });
     }
 
     // handling change in edit dialog
-    handleChange(e) {
+    handleChange = event => {
         this.setState({
             ...this.state, contents: {
                 ...this.state.contents,
-                [e.target.name]: e.target.value
+                [event.target.name]: event.target.value
             }
         });
     }
 
     // clicking on the options of the dropdown menu
-    handleClick(e) {
+    handleClick = event => {
         this.setState({
-            ...this.state, anchorEl: e.currentTarget
+            ...this.state, anchorEl: event.currentTarget
         });
     }
 
     // closing the dropdown menu
-    handleClose() {
+    handleClose = () => {
         this.setState({
             ...this.state, anchorEl: null
         });
     }
 
     // toggling edit dialog
-    toggleEdit() {
+    toggleEdit = () => {
         if (this.state.editMode) {
             let id = this.props.data._id;
             let index = this.props.index;
@@ -132,6 +132,7 @@ class Event extends React.Component {
                   margin="normal"
                   name="eventName"
                   onChange={this.handleChange}
+                  value={this.state.contents.eventName}
                 />
                 <TextField
                   className={classes.textField}
@@ -140,6 +141,7 @@ class Event extends React.Component {
                   name="startDate"
                   onChange={this.handleChange}
                   type="date"
+                  value={this.state.contents.startDate}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -151,6 +153,7 @@ class Event extends React.Component {
                   name="endDate"
                   onChange={this.handleChange}
                   type="date"
+                  value={this.state.contents.endDate}
                   InputLabelProps={{
                     shrink: true,
                   }}
